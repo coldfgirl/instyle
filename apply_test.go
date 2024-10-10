@@ -1,8 +1,9 @@
 package instyle_test
 
 import (
-	"instyle"
 	"testing"
+
+	"github.com/coldfgirl/instyle"
 )
 
 func TestApply(t *testing.T) {

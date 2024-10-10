@@ -1,10 +1,11 @@
 package instyle_test
 
 import (
+	"testing"
+
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/x/ansi"
-	"instyle"
-	"testing"
+	"github.com/coldfgirl/instyle"
 )
 
 const (
