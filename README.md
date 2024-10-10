@@ -4,6 +4,12 @@
 
 InStyle is a small library for efficiently decorating strings with ANSI escape codes.
 
+## Try It!
+
+```sh
+go run github.com/coldfgirl/instyle/cmd/...@latest '[!italic]you can [!cyan]style[/] text with [!bold+magenta]InStyle[/]!!!'
+```
+
 ## Syntax
 
 The tags follow the following format:
