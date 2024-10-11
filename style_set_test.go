@@ -10,7 +10,7 @@ import (
 
 const (
 	noStyle   = "[tag] sending request 3.2 second ago... log id: 10298402358"
-	withStyle = "[!bold][tag][/] sending request [!faint]3.2 seconds ago...[/] [!bold][!cyan]log id:[/] [!magenta]10298402358[/][/]"
+	withStyle = "[~bold][tag][/] sending request [~faint]3.2 seconds ago...[/] [~bold][~cyan]log id:[/] [~magenta]10298402358[/][/]"
 )
 
 func BenchmarkBaseline(b *testing.B) {
@@ -80,23 +80,23 @@ func TestStyleSet_Apply(t *testing.T) {
 		Expected string
 	}{
 		"Simple": {
-			In:       "[!bold]bolded text[/]",
+			In:       "[~bold]bolded text[/]",
 			Expected: "\033[0m\033[1mbolded text\033[0m",
 		},
 		"SequentialTags": {
-			In:       "[!red]one[/] [!blue]two[/] [!black]three[/]",
+			In:       "[~red]one[/] [~blue]two[/] [~black]three[/]",
 			Expected: "\033[0m\033[31mone\033[0m \033[34mtwo\033[0m \033[30mthree\033[0m",
 		},
 		"NestedTags": {
-			In:       "[!italic]this text is [!bold]bold [!red]red[/]-ish[/] and italic[/]",
+			In:       "[~italic]this text is [~bold]bold [~red]red[/]-ish[/] and italic[/]",
 			Expected: "\033[0m\033[3mthis text is \033[1mbold \033[31mred\033[0m\033[3m\033[1m-ish\033[0m\033[3m and italic\033[0m",
 		},
 		"UnclosedTags": {
-			In:       "[!bold]bold and [!red]red also",
+			In:       "[~bold]bold and [~red]red also",
 			Expected: "\033[0m\033[1mbold and \033[31mred also\033[0m",
 		},
 		"DeDuplicateEndResetTags": {
-			In:       "[!bold]nested and [!red]red[/]",
+			In:       "[~bold]nested and [~red]red[/]",
 			Expected: "\033[0m\033[1mnested and \033[31mred\033[0m",
 		},
 	}

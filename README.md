@@ -1,13 +1,20 @@
-# InStyle
+# inStyle
 
 ![demo.gif](demo.gif)
 
-InStyle is a small library for efficiently decorating strings with ANSI escape codes.
+inStyle is a small library for quickly decorating strings with ANSI escape codes.
 
 ## Try It!
 
 ```sh
-go run github.com/coldfgirl/instyle/cmd/...@latest '[!italic]you can [!cyan]style[/] text with [!bold+magenta]InStyle[/]!!!'
+go run github.com/coldfgirl/instyle/cmd/...@latest '[~italic]you can [~cyan]style[/] text with [~bold+magenta]inStyle[/]!!!'
+```
+
+Or even install it as a CLI tool:
+
+```sh
+go install github.com/coldfgirl/instyle/cmd/...@latest
+instyle [~red]
 ```
 
 ## Syntax
@@ -15,21 +22,21 @@ go run github.com/coldfgirl/instyle/cmd/...@latest '[!italic]you can [!cyan]styl
 The tags follow the following format:
 
 ```
-[!style]text to be styled[/]
+[~style]text to be styled[/]
 ```
 
 Style can be a named style, or a raw value to be used in an ANSI escape code.
 For example, both of these will turn the text red:
 
 ```
-[!red]this text will show up as red[/]
-[!31]this text will show up as red[/]
+[~red]this text will show up as red[/]
+[~31]this text will show up as red[/]
 ```
 
 The ending sequence of `[/]` can be fully omitted for minor performance gains like so:
 
 ```
-[!italic]ending tags need not be included
+[~italic]ending tags need not be included
 ```
 
 ### Multiple Styles
@@ -37,7 +44,7 @@ The ending sequence of `[/]` can be fully omitted for minor performance gains li
 Multiple styles can be added by using the `+` character between each style desired.
 
 ```
-[!magenta+bold]this text has two styles[/]
+[~magenta+bold]this text has two styles[/]
 ```
 
 ### Nesting & Sequential Tags
@@ -46,7 +53,7 @@ Up to 5 tags can be nested.
 All unclosed tags are terminated at the end of a string.
 
 ```
-[!cyan]i never said [!bold]you[/] did that[/]... [!italic]somebody else[/] did
+[~cyan]i never said [~bold]you[/] did that[/]... [~italic]somebody else[/] did
 ```
 
 ### Named Styles

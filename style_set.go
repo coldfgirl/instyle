@@ -17,7 +17,7 @@ const (
 )
 
 var (
-	openingBegin = []rune("[!")
+	openingBegin = []rune("[~")
 	openingClose = []rune("]")
 	closing      = []rune("[/]")
 
@@ -25,9 +25,34 @@ var (
 )
 
 type Styler interface {
+	// Apply will parse and replace any valid style tags in the original rune array and return the result.
+	//
+	//
+	// Style tags are applied to a maximum depth of 5 nested tags.
 	Apply(original []rune) (output []rune)
-	Register(key string, value string) (self Styler)
-	RegisterLipGlossStyle(key string, value lipgloss.Style) (self Styler)
+
+	// Register will add a new named style which can be used in future calls of Apply.
+	// The value expected is an ANSI escape code such as `31` for red.
+	// To have a style map to multiple ANSI escape codes, separate them with a semicolon.
+	//
+	// Names have a maximum length of 16 characters.
+	//
+	// For example:
+	//
+	//    s := instyle.NewStyler()
+	//    s.Register("error", "1;31")
+	//    _ = s.Apply([]rune("[~error]Something unexpected happened"))
+	Register(name string, value string) (self Styler)
+
+	// RegisterLipGlossStyle will extract the text styling from a [lipgloss.Style] and register it under the name provided.
+	// Specifically, the following will be captured if set on the style:
+	//
+	//  - Foreground color
+	//  - Background color
+	//  - Text styling of bold / faint / italic / underline / blink / strikethrough
+	//
+	// [lipgloss.Style]: https://github.com/charmbracelet/lipgloss
+	RegisterLipGlossStyle(name string, value lipgloss.Style) (self Styler)
 }
 
 type styleSet struct {
@@ -89,9 +114,9 @@ func NewStyler() Styler {
 	return s
 }
 
-func (s *styleSet) Register(key string, value string) Styler {
+func (s *styleSet) Register(name string, value string) Styler {
 	parsed := [keySizeMax]rune{}
-	for k, v := range key[:int(math.Min(keySizeMax, float64(len(key))))] {
+	for k, v := range name[:int(math.Min(keySizeMax, float64(len(name))))] {
 		parsed[k] = v
 	}
 
@@ -99,7 +124,7 @@ func (s *styleSet) Register(key string, value string) Styler {
 	return s
 }
 
-func (s *styleSet) RegisterLipGlossStyle(key string, value lipgloss.Style) Styler {
+func (s *styleSet) RegisterLipGlossStyle(name string, value lipgloss.Style) Styler {
 	p := lipgloss.ColorProfile()
 
 	var sequence []string
@@ -136,7 +161,7 @@ func (s *styleSet) RegisterLipGlossStyle(key string, value lipgloss.Style) Style
 		sequence = append(sequence, "6")
 	}
 
-	return s.Register(key, strings.Join(sequence, ";"))
+	return s.Register(name, strings.Join(sequence, ";"))
 }
 
 func (s *styleSet) Apply(runes []rune) []rune {
