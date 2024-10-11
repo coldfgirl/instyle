@@ -14,7 +14,6 @@ Or even install it as a CLI tool:
 
 ```sh
 go install github.com/coldfgirl/instyle/cmd/...@latest
-instyle [~red]
 ```
 
 ## Syntax

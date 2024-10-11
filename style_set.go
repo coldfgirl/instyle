@@ -1,6 +1,7 @@
 package instyle
 
 import (
+	"fmt"
 	"math"
 	"strings"
 
@@ -27,9 +28,18 @@ var (
 type Styler interface {
 	// Apply will parse and replace any valid style tags in the original rune array and return the result.
 	//
-	//
 	// Style tags are applied to a maximum depth of 5 nested tags.
 	Apply(original []rune) (output []rune)
+
+	// ApplyStr will call Apply while casting the arguments to/from strings.
+	// There is a reasonable performance hit to this over Apply.
+	ApplyStr(original string) (output string)
+
+	// ApplyStrf will call Apply while casting the arguments to/from strings and using fmt.Sprintf.
+	// Only the format string will be parsed for style tags.
+	//
+	// There is a reasonable performance hit to this over Apply.
+	ApplyStrf(format string, args ...any) (output string)
 
 	// Register will add a new named style which can be used in future calls of Apply.
 	// The value expected is an ANSI escape code such as `31` for red.
@@ -212,6 +222,18 @@ func (s *styleSet) Apply(runes []rune) []rune {
 	}
 
 	return output
+}
+
+// ApplyStr will call Apply while casting the arguments to/from strings.
+// There is a reasonable performance hit to this over Apply.
+func (s *styleSet) ApplyStr(original string) (output string) {
+	return string(s.Apply([]rune(original)))
+}
+
+// ApplyStrf will call Apply while casting the arguments to/from strings and using fmt.Sprintf.
+// There is a reasonable performance hit to this over Apply.
+func (s *styleSet) ApplyStrf(format string, args ...any) (output string) {
+	return fmt.Sprintf(string(NewStyler().Apply([]rune(format))), args...)
 }
 
 // parseOpening operates similarly to checkSequence but specifically for the opening of a style tag.
