@@ -233,7 +233,7 @@ func (s *styleSet) ApplyStr(original string) (output string) {
 // ApplyStrf will call Apply while casting the arguments to/from strings and using fmt.Sprintf.
 // There is a reasonable performance hit to this over Apply.
 func (s *styleSet) ApplyStrf(format string, args ...any) (output string) {
-	return fmt.Sprintf(string(NewStyler().Apply([]rune(format))), args...)
+	return fmt.Sprintf(string(s.Apply([]rune(format))), args...)
 }
 
 // parseOpening operates similarly to checkSequence but specifically for the opening of a style tag.
